@@ -1,6 +1,6 @@
 [package]
 name = "vanityhash"
-version = "0.2.0"
+version = "0.3.0"
 description = "CLI tool to find a hash that starts with a given prefix"
 authors = ["Evan Schwartz <evan.mark.schwartz@gmail.com>"]
 homepage = "https://github.com/emschwartz/vanityhash"
@@ -10,6 +10,7 @@ license = "MIT"
 [dependencies]
 base64 = "0.6.0"
 clap = "2.25.0"
+num_cpus = "1.0"
 rand = "0.3"
 ring = "0.11.0"
 scoped_threadpool = "0.1.7"

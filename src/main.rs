@@ -3,6 +3,7 @@ extern crate rand;
 extern crate ring;
 extern crate clap;
 extern crate scoped_threadpool;
+extern crate num_cpus;
 
 use rand::Rng;
 use ring::digest;
@@ -11,6 +12,7 @@ use clap::{App, Arg};
 use scoped_threadpool::Pool;
 
 fn main() {
+    let cpus: &str = &*num_cpus::get().to_string();
     let matches = App::new("vanityhash")
         .version("0.2")
         .author("Evan Schwartz <evan@ripple.com>")
@@ -41,7 +43,7 @@ fn main() {
                 .short("t")
                 .value_name("NUM_THREADS")
                 .takes_value(true)
-                .default_value("8"),
+                .default_value(cpus),
         )
         .arg(
             Arg::with_name("prefix")
