@@ -1,0 +1,11 @@
+[package]
+name = "vanityhash"
+version = "0.1.0"
+authors = ["Evan Schwartz <evan.mark.schwartz@gmail.com>"]
+
+[dependencies]
+base64 = "0.6.0"
+clap = "2.25.0"
+rand = "0.3"
+ring = "0.11.0"
+scoped_threadpool = "0.1.7"
