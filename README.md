@@ -2,6 +2,10 @@
 > Find your perfect hash
 
 ```sh
+vanityhash 0.1
+Evan Schwartz <evan@ripple.com>
+Searches for hashes that match a certain prefix
+
 USAGE:
     vanityhash [OPTIONS] <prefix>
 
@@ -11,8 +15,8 @@ FLAGS:
 
 OPTIONS:
         --include_both_cases <INCLUDE_BOTH_CASES>    Include upper and lowercase letters
-        --include_symbols <INCLUDE_SYMBOLS>          Include symbols that kinda look like the letters
-        --preimage_prefix <PREIMAGE_PREFIX>          The prefix the
+        --include_symbols <INCLUDE_SYMBOLS>          Include lookalike characters and numbers
+        --preimage_prefix <PREIMAGE_PREFIX>          The prefix the hash preimage should start with
     -t, --threads <NUM_THREADS>                      Number of threads to use [default: 8]
 
 ARGS:

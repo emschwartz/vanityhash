@@ -25,7 +25,7 @@ fn main() {
         )
         .arg(
             Arg::with_name("include_symbols")
-                .help("Include symbols that kinda look like the letters")
+                .help("Include lookalike characters and numbers")
                 .long("include_symbols")
                 .alias("symbols")
                 .value_name("INCLUDE_SYMBOLS")
@@ -33,7 +33,7 @@ fn main() {
         )
         .arg(
             Arg::with_name("preimage_prefix")
-                .help("The prefix the")
+                .help("The prefix the hash preimage should start with")
                 .long("preimage_prefix")
                 .value_name("PREIMAGE_PREFIX")
                 .takes_value(true),
@@ -76,6 +76,8 @@ fn main() {
                 loop {
                     // TODO don't allocate new memory for each loop
                     test_bytes.truncate(preimage_prefix_byte_length);
+                    // TODO use values faster than random bytes each time
+                    // (e.g. start w/ random val and increase it from there)
                     let rand_bytes: Vec<u8> =
                         rng.gen_iter().take(32 - preimage_prefix.len()).collect();
                     test_bytes.extend(rand_bytes);
