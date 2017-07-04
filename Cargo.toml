@@ -1,7 +1,11 @@
 [package]
 name = "vanityhash"
 version = "0.1.0"
+description = "CLI tool to find a hash that starts with a given prefix"
 authors = ["Evan Schwartz <evan.mark.schwartz@gmail.com>"]
+homepage = "https://github.com/emschwartz/vanityhash"
+repository = "https://github.com/emschwartz/vanityhash"
+license = "MIT"
 
 [dependencies]
 base64 = "0.6.0"
