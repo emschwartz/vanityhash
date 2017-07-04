@@ -12,7 +12,7 @@ use scoped_threadpool::Pool;
 
 fn main() {
     let matches = App::new("vanityhash")
-        .version("0.1")
+        .version("0.2")
         .author("Evan Schwartz <evan@ripple.com>")
         .about("Searches for hashes that match a certain prefix")
         .arg(
@@ -20,16 +20,12 @@ fn main() {
                 .help("Include upper and lowercase letters")
                 .long("include_both_cases")
                 .alias("cases")
-                .value_name("INCLUDE_BOTH_CASES")
-                .takes_value(true),
         )
         .arg(
             Arg::with_name("include_symbols")
                 .help("Include lookalike characters and numbers")
                 .long("include_symbols")
                 .alias("symbols")
-                .value_name("INCLUDE_SYMBOLS")
-                .takes_value(true),
         )
         .arg(
             Arg::with_name("preimage_prefix")
@@ -54,10 +50,8 @@ fn main() {
         )
         .get_matches();
 
-    let include_both_cases: bool =
-        FromStr::from_str(matches.value_of("include_both_cases").unwrap_or("false")).unwrap();
-    let include_symbols: bool =
-        FromStr::from_str(matches.value_of("include_symbols").unwrap_or("false")).unwrap();
+    let include_both_cases = matches.is_present("include_both_cases");
+    let include_symbols = matches.is_present("include_symbols");
     let threads: u32 = FromStr::from_str(matches.value_of("threads").unwrap_or("8")).unwrap();
     let preimage_prefix = matches.value_of("preimage_prefix").unwrap_or("");
     let prefix = matches.value_of("prefix").unwrap_or("");
@@ -71,16 +65,12 @@ fn main() {
                 let mut test_bytes =
                     base64::decode_config(preimage_prefix, base64::URL_SAFE_NO_PAD).unwrap();
                 let preimage_prefix_byte_length = test_bytes.len();
-                // TODO fix off-by-one error
+                let rand_bytes: Vec<u8> =
+                    rng.gen_iter().take(32 - preimage_prefix_byte_length).collect();
+                test_bytes.extend(rand_bytes);
 
                 loop {
-                    // TODO don't allocate new memory for each loop
-                    test_bytes.truncate(preimage_prefix_byte_length);
-                    // TODO use values faster than random bytes each time
-                    // (e.g. start w/ random val and increase it from there)
-                    let rand_bytes: Vec<u8> =
-                        rng.gen_iter().take(32 - preimage_prefix.len()).collect();
-                    test_bytes.extend(rand_bytes);
+                    increment(&mut test_bytes);
                     // TODO configurable hash function and encoding
                     let output = base64::encode_config(
                         &digest::digest(&digest::SHA256, &test_bytes),
@@ -103,6 +93,18 @@ fn main() {
 
     // Keep the main thread alive
     loop {}
+}
+
+fn increment (v: &mut Vec<u8>) {
+    for i in (0..32).rev() {
+        if v[i] < 255 {
+            v[i] += 1;
+            return
+        } else {
+            v[i] = 0;
+            continue
+        }
+    }
 }
 
 fn matching_characters(a: &str, b: &str, include_both_cases: bool, include_symbols: bool) -> bool {
